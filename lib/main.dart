@@ -1,13 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:inv_management_app/components/universal/universal_settings.dart';
+import 'package:inv_management_app/db/db_helper.dart';
+import 'package:inv_management_app/features/dashboard/provider/dashboard_controller.dart';
+import 'package:inv_management_app/features/home/provider/home_controller.dart';
+import 'package:inv_management_app/features/productList_dir/provider/product_list_controller.dart';
+import 'package:inv_management_app/services/db_service.dart';
 import 'package:provider/provider.dart';
+
+import 'features/add_product/provider/addproduct_controller.dart';
+import 'features/dashboard/view/dashboard_screen.dart';
+import 'features/sale_dir/provider/sales_controller.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => Counter()),
         ChangeNotifierProvider(create: (_) => ThemeModel()),
+        ChangeNotifierProvider(create: (_) => DashBoardProvider()),
+        ChangeNotifierProvider(
+            create: (_) => HomeProvider(
+                  service: ProductService(DatabaseHelper()),
+                  dbHelper: DatabaseHelper(),
+                )),
+        ChangeNotifierProvider(
+          create: (_) => ProductListProvider(
+            ProductService(
+              DatabaseHelper(),
+            ),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AddProductProvider(
+            service: ProductService(DatabaseHelper()),
+            dbHelper: DatabaseHelper(),
+          ),
+        ),
+        ChangeNotifierProvider(create: (_) => SalesProvider()),
       ],
       child: MyApp(),
     ),
@@ -23,22 +51,24 @@ class MyApp extends StatelessWidget {
     final themeModel = Provider.of<ThemeModel>(context);
     return MaterialApp(
       title: 'Inventory App',
-      theme: themeModel.isDarkMode ? ThemeData.dark() : ThemeData.light(),
-      home: HomeScreen(),
+      debugShowCheckedModeBanner: false,
+      theme:
+          themeModel.isDarkMode ? themeModel.darkTheme : themeModel.lightTheme,
+      home: StartScreen(),
     );
   }
 }
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class StartScreen extends StatefulWidget {
+  const StartScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<StartScreen> createState() => _StartScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _StartScreenState extends State<StartScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return DashboardScreen();
   }
 }
