@@ -1,35 +1,21 @@
-class SaleDetail {
-  final int? id;
-  final int saleId;
-  final int productId;
-  final int quantity;
-  final double price;
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:inv_management_app/models/item_model.dart';
+import 'package:inv_management_app/models/sales_product.dart';
 
-  SaleDetail({
-    this.id,
-    required this.saleId,
-    required this.productId,
-    required this.quantity,
-    required this.price,
-  });
+part 'sales_model.freezed.dart';
+part 'sales_model.g.dart';
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'saleId': saleId,
-      'productId': productId,
-      'quantity': quantity,
-      'price': price,
-    };
-  }
 
-  factory SaleDetail.fromMap(Map<String, dynamic> map) {
-    return SaleDetail(
-      id: map['id'],
-      saleId: map['saleId'],
-      productId: map['productId'],
-      quantity: map['quantity'],
-      price: map['price'],
-    );
-  }
+@unfreezed
+class SalesModel with _$SalesModel {
+  factory SalesModel({
+    required String? sales_date,
+    required String? sales_id,
+    required List <SalesProduct>? sales_item,
+
+
+  }) = _SalesModel;
+
+  factory SalesModel.fromJson(Map<String, dynamic> json) =>
+      _$SalesModelFromJson(json);
 }

@@ -7,6 +7,9 @@ class Product {
   final String unit_of_measurement;
   final int quantity;
 
+
+
+
   Product({
     this.id,
     required this.product_name,

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:inv_management_app/components/universal/universal_settings.dart';
 import 'package:inv_management_app/db/db_helper.dart';
 import 'package:inv_management_app/features/dashboard/provider/dashboard_controller.dart';
+import 'package:inv_management_app/features/forecast_dir/provider/forecast_controller.dart';
 import 'package:inv_management_app/features/home/provider/home_controller.dart';
 import 'package:inv_management_app/features/productList_dir/provider/product_list_controller.dart';
+import 'package:inv_management_app/network/network_client.dart';
 import 'package:inv_management_app/services/db_service.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +19,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeModel()),
         ChangeNotifierProvider(create: (_) => DashBoardProvider()),
+        ChangeNotifierProvider(create: (_) => ForecastController()),
         ChangeNotifierProvider(
             create: (_) => HomeProvider(
                   service: ProductService(DatabaseHelper()),
@@ -27,6 +30,7 @@ void main() {
             ProductService(
               DatabaseHelper(),
             ),
+            NetworkService()
           ),
         ),
         ChangeNotifierProvider(

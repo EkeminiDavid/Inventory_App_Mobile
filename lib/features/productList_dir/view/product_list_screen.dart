@@ -13,8 +13,8 @@ class ProductListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Provider.of<ProductListProvider>(context, listen: false);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.initMethod();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await controller.initMethod(context);
     });
     return Scaffold(
       appBar: AppBar(
@@ -32,7 +32,7 @@ class ProductListScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => AddProductScreen()),
                   ).then((_) {
                     Provider.of<ProductListProvider>(context, listen: false)
-                        .fetchProducts();
+                        .newFetchProducts(context);
                   });
                 },
                 tooltip: 'Add New Product',
@@ -44,7 +44,7 @@ class ProductListScreen extends StatelessWidget {
       ),
       body: Consumer<ProductListProvider>(
         builder: (context, provider, child) {
-          if (provider.products.isEmpty) {
+          if (provider.items.isEmpty) {
             return Center(child: Text('No products available'));
           }
           return Column(
@@ -84,19 +84,19 @@ class ProductListScreen extends StatelessWidget {
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: provider.productList.length,
+                  itemCount: provider.itemList.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    final product = provider.productList[index];
+                    final product = provider.itemList[index];
                     return ListTile(
-                      title: Text(product.product_name),
+                      title: Text(product.product_name!),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Selling Price: ${product.selling_price}'),
                           Text('Cost Price: ${product.cost_price}'),
                           Text('Quantity: ${product.quantity}'),
-                          Text('Unit: ${product.unit_of_measurement}'),
+                          Text('Unit: ${product.measurement}'),
                         ],
                       ),
                       trailing: IconButton(
@@ -119,10 +119,10 @@ class ProductListScreen extends StatelessWidget {
                                   TextButton(
                                     child: Text('Delete'),
                                     onPressed: () async {
-                                      await Provider.of<ProductListProvider>(
-                                              context,
-                                              listen: false)
-                                          .deleteProduct(product.id);
+                                      // await Provider.of<ProductListProvider>(
+                                      //         context,
+                                      //         listen: false)
+                                      //     .deleteProduct(product.id);
                                       Navigator.of(context).pop();
                                     },
                                   ),

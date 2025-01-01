@@ -33,23 +33,3 @@ class DashBoardProvider extends ChangeNotifier {
   }
 }
 
-class CounterModel extends ChangeNotifier {
-  int _count = 0;
-
-  int get count => _count;
-
-  String name = "Henry Akpan";
-
-  void changeName() {
-    name = "Akanimo Ekong";
-    notifyListeners();
-  }
-
-  void increment() {
-    _count++;
-    notifyListeners();
-  }
-}
-
-
-

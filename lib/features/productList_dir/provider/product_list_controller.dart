@@ -1,60 +1,83 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:inv_management_app/components/universal/toast_widget.dart';
+import 'package:inv_management_app/models/item_model.dart';
 
 import '../../../models/product_model.dart';
+import '../../../network/network_client.dart';
 import '../../../services/db_service.dart';
 
 class ProductListProvider extends ChangeNotifier {
   final ProductService _productService;
   List<Product> _products = [];
+   List<ItemModel> _items = [];
   final TextEditingController searchController = TextEditingController();
+  final NetworkService networkService;
+  List<Product> _originalProductList = [];
+  List<ItemModel> _originalItemList = [];
+
+  List<Product> _filteredProductList = [];
+  List<ItemModel> _filteredItemList = [];
+
+  List<Product> get productList => _filteredProductList;
+  List<ItemModel> get itemList => _filteredItemList;
 
 
-  ProductListProvider(this._productService);
+  ProductListProvider(this._productService, this.networkService);
 
   List<Product> get products => _products;
+  List<ItemModel> get items => _items;
 
 
-   void initMethod(){
-     fetchProducts();
+
+   Future<void> initMethod(BuildContext context) async {
+     // fetchProducts();
+    await newFetchProducts(context);
 
    }
 
-  Future<void> fetchProducts() async {
-    try {
-      _products = await _productService.getProducts();
-      initializeProducts(_products);
+   Future<void> newFetchProducts(BuildContext context) async{
+     showLoader(context);
+     try{
+       final products = await networkService.getProductService();
+       _items = products.body ?? [];
+       notifyListeners();
 
-      notifyListeners();
-    } catch (e) {
-      print('Error fetching products: $e');
-    }
-  }
+       initializeItems(_items);
+       log(_items.toString());
+       hideLoader();
+     }catch(err){
+       print('Error fetching products: $err');
+       hideLoader();
 
-  // Future<void> addProduct(Product product) async {
+     }
+
+   }
+
+  // Future<void> fetchProducts() async {
   //   try {
-  //     await _productService.addProduct(product);
-  //     await fetchProducts();
+  //     _products = await _productService.getProducts();
+  //     initializeProducts(_products);
+  //
+  //     notifyListeners();
   //   } catch (e) {
-  //     print('Error adding product: $e');
+  //     print('Error fetching products: $e');
   //   }
   // }
 
-  Future<void> deleteProduct(int? productId) async {
-    try {
-      await _productService.deleteProduct(productId);
-      await fetchProducts();
-      notifyListeners();
-    } catch (e) {
-      print('Error deleting product: $e');
-    }
-  }
 
-  List<Product> _originalProductList = [];
-
-  List<Product> _filteredProductList = [];
-
-  List<Product> get productList => _filteredProductList;
+  // Future<void> deleteProduct(int? productId) async {
+  //   try {
+  //     await _productService.deleteProduct(productId);
+  //     await fetchProducts();
+  //     notifyListeners();
+  //   } catch (e) {
+  //     print('Error deleting product: $e');
+  //   }
+  // }
+  //
 
 
   void initializeProducts(List<Product> products) {
@@ -63,15 +86,21 @@ class ProductListProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void initializeItems(List<ItemModel> items) {
+    _originalItemList = items;
+    _filteredItemList = List.from(_originalItemList);
+    notifyListeners();
+  }
+
   void searchProducts(String query) {
     if (query.isEmpty) {
-      _filteredProductList = List.from(_originalProductList);
+      _filteredItemList = List.from(_originalItemList);
     } else {
-      _filteredProductList = _originalProductList
+      _filteredItemList = _originalItemList
           .where((product) =>
       product.product_name!.toLowerCase().contains(query.toLowerCase()) ||
-          (product.product_barcode != null &&
-              product.product_barcode!.toLowerCase().contains(query.toLowerCase())))
+          (product.barcode != null &&
+              product.barcode!.toLowerCase().contains(query.toLowerCase())))
           .toList();
     }
     notifyListeners();

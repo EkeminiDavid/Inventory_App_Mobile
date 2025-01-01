@@ -12,7 +12,7 @@ class HomeScreen extends StatelessWidget {
     final controller = Provider.of<HomeProvider>(context, listen: false);
     final size = MediaQuery.maybeOf(context)?.size;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.initMethod();
+      controller.initMethod(context);
     });
 
     return SafeArea(
@@ -41,7 +41,11 @@ class HomeScreen extends StatelessWidget {
                         children: [
 
                           Text('Total Products: ', style: Theme.of(context).textTheme.labelLarge,),
-                          Text(controller.productCount.toString()),
+                          Consumer<HomeProvider>(
+                            builder: (context, homeProvider, child) {
+                              return Text(controller.productCount.toString());
+                            }
+                          ),
 
                         ],
                       ),
@@ -164,7 +168,7 @@ class HomeScreen extends StatelessWidget {
                                         child: Assets.icons.sales.svg(),
                                       ),
                                     ),
-                                    Text('Forcast')
+                                    Text('Forecast')
                                   ],
                                 ),
                               ),

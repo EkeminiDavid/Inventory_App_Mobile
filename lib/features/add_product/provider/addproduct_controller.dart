@@ -3,7 +3,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:inv_management_app/components/universal/toast_widget.dart';
 import 'package:inv_management_app/db/db_helper.dart';
+import 'package:inv_management_app/network/network_client.dart';
 import 'package:inv_management_app/services/db_service.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +20,7 @@ class AddProductProvider extends ChangeNotifier {
   String? selectedUnit;
   List<String> units = ['Pcs', 'Can', 'Bottle', 'Carton'];
   int quantity = 0;
+  NetworkService networkService = NetworkService();
 
   void selectUnit(String newValue) {
     selectedUnit = newValue;
@@ -50,10 +53,41 @@ class AddProductProvider extends ChangeNotifier {
       unit_of_measurement: unitOfMeasurement,
       quantity: quantity,
     );
+
+    var bodyForServer = {
+      "barcode": productBarcode,
+      "cost_price": costPrice,
+      "measurement": unitOfMeasurement,
+      "product_name": productName,
+      "quantity": quantity,
+      "selling_price": sellingPrice
+    };
+    await add(bodyForServer, context);
     await service.addProduct(newProduct);
     await fetchProducts();
-    Provider.of<ProductListProvider>(context, listen: false).fetchProducts();
+    Provider.of<ProductListProvider>(context, listen: false).newFetchProducts(context);
     notifyListeners();
+  }
+
+  Future<void> add(
+      Map<String, dynamic> bodyForServer, BuildContext context) async {
+    showLoader(context);
+    final response = await networkService.addProductService(bodyForServer);
+    // final newResponse = await networkService.getProductService();
+    if (response == true) {
+      hideLoader();
+      if (context.mounted) {
+        newSuccessSnack(context, "Product Added to Server");
+      }
+    } else {
+      hideLoader();
+      if (context.mounted) {
+        newErrorSnack(
+          context,
+          "Product noy Added to Server",
+        );
+      }
+    }
   }
 
   Future<void> fetchProducts() async {
@@ -62,15 +96,15 @@ class AddProductProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addNewProduct(BuildContext context) {
-    if(quantity <= 0){
+  Future<void> addNewProduct(BuildContext context) async {
+    if (quantity <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Quantity can be less than or equal to 0 ")),
       );
       return;
     }
 
-    if(productNameController.text.toString() == ""){
+    if (productNameController.text.toString() == "") {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Every Product must have a name")),
       );
@@ -83,9 +117,9 @@ class AddProductProvider extends ChangeNotifier {
         '${costPriceController.text}\n'
         '${selectedUnit ?? ''}\n'
         'Quantity is $quantity\n');
-    addProduct(context,
+    await addProduct(context,
         productName: productNameController.text ?? "",
-        sellingPrice: double.parse(sellingPriceController.text)  ,
+        sellingPrice: double.parse(sellingPriceController.text),
         productBarcode: barcodeController.text ?? "",
         costPrice: double.parse(costPriceController.text),
         unitOfMeasurement: selectedUnit ?? '',
@@ -112,9 +146,10 @@ class AddProductProvider extends ChangeNotifier {
     selectedUnit = null;
   }
 
-  Future<void> startBarcodeScan(BuildContext context) async {
+  Future<String> startBarcodeScan(BuildContext context) async {
     try {
       // Start the barcode scan
+      String realBarcode = "";
       String scannedData = await FlutterBarcodeScanner.scanBarcode(
         "#ff6666", // Scanner overlay color
         "Cancel", // Cancel button text
@@ -129,18 +164,21 @@ class AddProductProvider extends ChangeNotifier {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Scanned Data: $scannedData")),
         );
+        return realBarcode;
+      } else {
+        return "Not Successful";
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: $e")),
       );
+      return "Not Successful";
     }
   }
 
   addClicked() {
     quantity = quantity + 1;
     notifyListeners();
-
   }
 
   minusClicked() {
@@ -148,6 +186,12 @@ class AddProductProvider extends ChangeNotifier {
     if (quantity < 0) {
       quantity = 0;
     }
+    notifyListeners();
+  }
+
+  Future<void> scanBarcode(BuildContext context) async {
+    String barcode = await startBarcodeScan(context);
+    barcodeController.text = barcode;
     notifyListeners();
   }
 }

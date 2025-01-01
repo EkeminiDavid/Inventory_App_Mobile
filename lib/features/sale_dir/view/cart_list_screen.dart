@@ -8,7 +8,12 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final salesProvider = Provider.of<SalesProvider>(context);
+    // final salesProvider = Provider.of<SalesProvider>(context);
+    final salesProvider = Provider.of<SalesProvider>(context, listen: false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await salesProvider.loadProducts(context);
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -29,29 +34,28 @@ class CartScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: salesProvider.cart.isEmpty
+            child: salesProvider.cartItems.isEmpty
                 ? Center(child: Text('Your cart is empty'))
                 : ListView.builder(
-              itemCount: salesProvider.cart.length,
+              itemCount: salesProvider.cartItems.length,
               itemBuilder: (context, index) {
-                final productId = salesProvider.cart.keys.elementAt(index);
-                final quantity = salesProvider.cart[productId]!;
-                final product = salesProvider.products.firstWhere((p) => p.id == productId);
+                final cartItems = salesProvider.cartItems;
 
                 return ListTile(
-                  title: Text(product.product_name),
-                  subtitle: Text('\$${product.selling_price.toStringAsFixed(2)}'),
+                  // title: Text(product.product_name!),
+                  title: Text(cartItems[index].product!.product_name!),
+                  subtitle: Text('\$${cartItems[index].product!.selling_price?.toStringAsFixed(2)}'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
                         icon: Icon(Icons.remove),
-                        onPressed: () => salesProvider.removeFromCart(productId),
+                        onPressed: () => salesProvider.subtractQuantity(cartItems[index]),
                       ),
-                      Text(quantity.toString()),
+                      Text(cartItems[index].product_quantity.toString()),
                       IconButton(
                         icon: Icon(Icons.add),
-                        onPressed: () => salesProvider.addToCart(productId),
+                        onPressed: () => salesProvider.addQuantity(cartItems[index]),
                       ),
                     ],
                   ),
@@ -71,9 +75,9 @@ class CartScreen extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     await salesProvider.completeSale(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
+                  /*  ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Sale completed!')),
-                    );
+                    );*/
                   },
                   child: Text('Complete Sale'),
                 ),
@@ -152,7 +156,8 @@ class CartScreen extends StatelessWidget {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => SalesProductScreen()));
         },
-      ),*//*
+      ),*/
+/*
 
       body: salesProvider.cart.isEmpty
           ? Center(

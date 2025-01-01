@@ -43,6 +43,7 @@ class AddProductScreen extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
+                        controller.scanBarcode(context);
                         controller.startBarcodeScan(context);
                       },
                       child: Container(

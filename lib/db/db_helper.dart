@@ -46,7 +46,6 @@ class DatabaseHelper {
           ${entities.saleTotal} REAL
         )''');
 
-
         await db.execute('''
         CREATE TABLE ${entities.saleDetailsTable} (
           ${entities.saleDetailId} INTEGER PRIMARY KEY AUTOINCREMENT,

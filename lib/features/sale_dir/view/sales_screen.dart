@@ -214,7 +214,7 @@ class SalesProductScreen extends StatelessWidget {
                       );
                         });
                   },
-*//*
+*/ /*
 
                   title: Text(product.product_name),
                   subtitle: Text('\$${product.selling_price.toStringAsFixed(2)}'),
@@ -234,7 +234,7 @@ class SalesProductScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-*//*
+*/ /*
 
                 );
               },
@@ -263,7 +263,7 @@ class SalesProductScreen extends StatelessWidget {
               ],
             ),
           ),
-*//*
+*/ /*
 
         ],
       ),
@@ -272,8 +272,8 @@ class SalesProductScreen extends StatelessWidget {
 }
 */
 
-
 import 'package:flutter/material.dart';
+import 'package:inv_management_app/models/cart_item.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/sales_controller.dart';
@@ -305,7 +305,6 @@ class SalesProductScreen extends StatelessWidget {
                     },
                   ),
                 ),
-
                 GestureDetector(
                   onTap: () {
                     salesProvider.startBarcodeScan(context);
@@ -321,18 +320,19 @@ class SalesProductScreen extends StatelessWidget {
                         color: Colors.white,
                       )),
                 )
-
               ],
             ),
           ),
-
           Expanded(
             child: ListView.builder(
               itemCount: salesProvider.productList.length,
+              shrinkWrap: true,
               itemBuilder: (context, index) {
                 final product = salesProvider.productList[index];
                 return ListTile(
+
                   onTap: () {
+                    salesProvider.product = product;
                     showModalBottomSheet(
                       context: context,
                       builder: (BuildContext context) {
@@ -343,28 +343,34 @@ class SalesProductScreen extends StatelessWidget {
                               height: MediaQuery.of(context).size.height / 3,
                               width: MediaQuery.of(context).size.width,
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   const SizedBox(height: 16),
                                   Text(
-                                    product.product_name,
-                                    style: Theme.of(context).textTheme.labelLarge,
+                                    product.product_name!,
+                                    style:
+                                        Theme.of(context).textTheme.labelLarge,
                                   ),
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       'Quantity',
-                                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.normal,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                     ),
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       GestureDetector(
-                                        onTap: () => salesProvider.minusClicked(),
+                                        onTap: () =>
+                                            salesProvider.minusClicked(),
                                         child: Card(
                                           color: Colors.grey.shade800,
                                           child: const Center(
@@ -378,11 +384,14 @@ class SalesProductScreen extends StatelessWidget {
                                       SizedBox(width: 16),
                                       Text(
                                         salesProvider.quantity.toString(),
-                                        style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall!
+                                            .copyWith(
+                                              fontSize: 14,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                       ),
                                       SizedBox(width: 16),
                                       GestureDetector(
@@ -406,20 +415,29 @@ class SalesProductScreen extends StatelessWidget {
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.grey.shade800,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(16),
+                                          borderRadius:
+                                              BorderRadius.circular(16),
                                         ),
                                       ),
                                       onPressed: () {
                                         // Add to cart with the specific product and current quantity
-                                        for (int i = 0; i < salesProvider.quantity; i++) {
-                                          salesProvider.addToCart(product.id!);
+                                        for (int i = 0;
+                                            i < salesProvider.quantity;
+                                            i++) {
+
                                         }
+                                        salesProvider.addToCart(CartItem(
+                                            product_quantity:
+                                            salesProvider.quantity,
+                                            product: salesProvider.product), context);
 
                                         // Navigate to Cart Screen
                                         Navigator.pushReplacement(
                                             context,
-                                            MaterialPageRoute(builder: (context) => CartScreen())
-                                        );
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CartScreen()));
+                                        salesProvider.quantity = 0;
                                       },
                                       child: const Text(
                                         'Add to Cart',
@@ -435,8 +453,9 @@ class SalesProductScreen extends StatelessWidget {
                       },
                     );
                   },
-                  title: Text(product.product_name),
-                  subtitle: Text('\$${product.selling_price.toStringAsFixed(2)}'),
+                  title: Text(product.product_name!),
+                  subtitle:
+                      Text('\$${product.selling_price?.toStringAsFixed(2)}'),
                 );
               },
             ),
