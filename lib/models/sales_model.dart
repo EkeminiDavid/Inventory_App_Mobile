@@ -11,6 +11,7 @@ class SalesModel with _$SalesModel {
   factory SalesModel({
     required String? sales_date,
     required String? sales_id,
+    required double? total_amount,
     required List <SalesProduct>? sales_item,
 
 

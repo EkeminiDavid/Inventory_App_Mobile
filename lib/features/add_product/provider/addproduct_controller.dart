@@ -73,7 +73,6 @@ class AddProductProvider extends ChangeNotifier {
       Map<String, dynamic> bodyForServer, BuildContext context) async {
     showLoader(context);
     final response = await networkService.addProductService(bodyForServer);
-    // final newResponse = await networkService.getProductService();
     if (response == true) {
       hideLoader();
       if (context.mounted) {
@@ -148,7 +147,6 @@ class AddProductProvider extends ChangeNotifier {
 
   Future<String> startBarcodeScan(BuildContext context) async {
     try {
-      // Start the barcode scan
       String realBarcode = "";
       String scannedData = await FlutterBarcodeScanner.scanBarcode(
         "#ff6666", // Scanner overlay color
@@ -160,10 +158,10 @@ class AddProductProvider extends ChangeNotifier {
       if (scannedData != '-1') {
         // Display scanned data
         barcodeController.text = scannedData;
-        notifyListeners();
-        ScaffoldMessenger.of(context).showSnackBar(
+        // notifyListeners();
+        /*ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Scanned Data: $scannedData")),
-        );
+        );*/
         return realBarcode;
       } else {
         return "Not Successful";
@@ -191,7 +189,7 @@ class AddProductProvider extends ChangeNotifier {
 
   Future<void> scanBarcode(BuildContext context) async {
     String barcode = await startBarcodeScan(context);
-    barcodeController.text = barcode;
-    notifyListeners();
+    // barcodeController.text = barcode;
+    // notifyListeners();
   }
 }

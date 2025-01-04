@@ -24,6 +24,8 @@ mixin _$SalesModel {
   set sales_date(String? value) => throw _privateConstructorUsedError;
   String? get sales_id => throw _privateConstructorUsedError;
   set sales_id(String? value) => throw _privateConstructorUsedError;
+  double? get total_amount => throw _privateConstructorUsedError;
+  set total_amount(double? value) => throw _privateConstructorUsedError;
   List<SalesProduct>? get sales_item => throw _privateConstructorUsedError;
   set sales_item(List<SalesProduct>? value) =>
       throw _privateConstructorUsedError;
@@ -41,7 +43,10 @@ abstract class $SalesModelCopyWith<$Res> {
       _$SalesModelCopyWithImpl<$Res, SalesModel>;
   @useResult
   $Res call(
-      {String? sales_date, String? sales_id, List<SalesProduct>? sales_item});
+      {String? sales_date,
+      String? sales_id,
+      double? total_amount,
+      List<SalesProduct>? sales_item});
 }
 
 /// @nodoc
@@ -59,6 +64,7 @@ class _$SalesModelCopyWithImpl<$Res, $Val extends SalesModel>
   $Res call({
     Object? sales_date = freezed,
     Object? sales_id = freezed,
+    Object? total_amount = freezed,
     Object? sales_item = freezed,
   }) {
     return _then(_value.copyWith(
@@ -70,6 +76,10 @@ class _$SalesModelCopyWithImpl<$Res, $Val extends SalesModel>
           ? _value.sales_id
           : sales_id // ignore: cast_nullable_to_non_nullable
               as String?,
+      total_amount: freezed == total_amount
+          ? _value.total_amount
+          : total_amount // ignore: cast_nullable_to_non_nullable
+              as double?,
       sales_item: freezed == sales_item
           ? _value.sales_item
           : sales_item // ignore: cast_nullable_to_non_nullable
@@ -87,7 +97,10 @@ abstract class _$$SalesModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? sales_date, String? sales_id, List<SalesProduct>? sales_item});
+      {String? sales_date,
+      String? sales_id,
+      double? total_amount,
+      List<SalesProduct>? sales_item});
 }
 
 /// @nodoc
@@ -103,6 +116,7 @@ class __$$SalesModelImplCopyWithImpl<$Res>
   $Res call({
     Object? sales_date = freezed,
     Object? sales_id = freezed,
+    Object? total_amount = freezed,
     Object? sales_item = freezed,
   }) {
     return _then(_$SalesModelImpl(
@@ -114,6 +128,10 @@ class __$$SalesModelImplCopyWithImpl<$Res>
           ? _value.sales_id
           : sales_id // ignore: cast_nullable_to_non_nullable
               as String?,
+      total_amount: freezed == total_amount
+          ? _value.total_amount
+          : total_amount // ignore: cast_nullable_to_non_nullable
+              as double?,
       sales_item: freezed == sales_item
           ? _value.sales_item
           : sales_item // ignore: cast_nullable_to_non_nullable
@@ -128,6 +146,7 @@ class _$SalesModelImpl implements _SalesModel {
   _$SalesModelImpl(
       {required this.sales_date,
       required this.sales_id,
+      required this.total_amount,
       required this.sales_item});
 
   factory _$SalesModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -138,11 +157,13 @@ class _$SalesModelImpl implements _SalesModel {
   @override
   String? sales_id;
   @override
+  double? total_amount;
+  @override
   List<SalesProduct>? sales_item;
 
   @override
   String toString() {
-    return 'SalesModel(sales_date: $sales_date, sales_id: $sales_id, sales_item: $sales_item)';
+    return 'SalesModel(sales_date: $sales_date, sales_id: $sales_id, total_amount: $total_amount, sales_item: $sales_item)';
   }
 
   @JsonKey(ignore: true)
@@ -163,6 +184,7 @@ abstract class _SalesModel implements SalesModel {
   factory _SalesModel(
       {required String? sales_date,
       required String? sales_id,
+      required double? total_amount,
       required List<SalesProduct>? sales_item}) = _$SalesModelImpl;
 
   factory _SalesModel.fromJson(Map<String, dynamic> json) =
@@ -174,6 +196,9 @@ abstract class _SalesModel implements SalesModel {
   @override
   String? get sales_id;
   set sales_id(String? value);
+  @override
+  double? get total_amount;
+  set total_amount(double? value);
   @override
   List<SalesProduct>? get sales_item;
   set sales_item(List<SalesProduct>? value);
