@@ -58,6 +58,4 @@ class ThemeModel with ChangeNotifier {
     // Define additional dark theme properties here
   );
 
-
-
 }
