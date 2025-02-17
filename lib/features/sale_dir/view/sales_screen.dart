@@ -273,6 +273,7 @@ class SalesProductScreen extends StatelessWidget {
 */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_rating/flutter_rating.dart';
 import 'package:inv_management_app/models/cart_item.dart';
 import 'package:provider/provider.dart';
 
@@ -330,7 +331,6 @@ class SalesProductScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final product = salesProvider.productList[index];
                 return ListTile(
-
                   onTap: () {
                     salesProvider.product = product;
                     showModalBottomSheet(
@@ -423,13 +423,13 @@ class SalesProductScreen extends StatelessWidget {
                                         // Add to cart with the specific product and current quantity
                                         for (int i = 0;
                                             i < salesProvider.quantity;
-                                            i++) {
-
-                                        }
-                                        salesProvider.addToCart(CartItem(
-                                            product_quantity:
-                                            salesProvider.quantity,
-                                            product: salesProvider.product), context);
+                                            i++) {}
+                                        salesProvider.addToCart(
+                                            CartItem(
+                                                product_quantity:
+                                                    salesProvider.quantity,
+                                                product: salesProvider.product),
+                                            context);
 
                                         // Navigate to Cart Screen
                                         Navigator.pushReplacement(
@@ -454,7 +454,14 @@ class SalesProductScreen extends StatelessWidget {
                     );
                   },
                   title: Text(product.product_name!),
-                  trailing: Text('rating: ${product.customer_rating}'),
+                  trailing: SizedBox(
+                      width: 100,
+                      height: 15,
+                      child: StarRating(
+                        size: 20,
+                        rating: product.customer_rating ?? 0.0,
+                      )),
+                  /*Text('rating: ${product.customer_rating}')*/
                   subtitle:
                       Text('\$${product.selling_price?.toStringAsFixed(2)}'),
                 );
