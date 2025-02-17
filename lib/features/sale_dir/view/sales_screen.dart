@@ -461,7 +461,6 @@ class SalesProductScreen extends StatelessWidget {
                         size: 20,
                         rating: product.customer_rating ?? 0.0,
                       )),
-                  /*Text('rating: ${product.customer_rating}')*/
                   subtitle:
                       Text('\$${product.selling_price?.toStringAsFixed(2)}'),
                 );
