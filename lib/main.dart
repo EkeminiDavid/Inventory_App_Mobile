@@ -19,29 +19,17 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeModel()),
         ChangeNotifierProvider(create: (_) => DashBoardProvider()),
-        ChangeNotifierProvider(create: (_) => ForecastController()),
+        ChangeNotifierProvider(create: (_) => PredictionProvider()),
+        ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(
-            create: (_) => HomeProvider(
-                  service: ProductService(DatabaseHelper()),
-                  dbHelper: DatabaseHelper(),
-                )),
-        ChangeNotifierProvider(
-          create: (_) => ProductListProvider(
-            ProductService(
-              DatabaseHelper(),
-            ),
-            NetworkService()
-          ),
+          create: (_) => ProductListProvider(NetworkService()),
         ),
         ChangeNotifierProvider(
-          create: (_) => AddProductProvider(
-            service: ProductService(DatabaseHelper()),
-            dbHelper: DatabaseHelper(),
-          ),
+          create: (_) => AddProductProvider(),
         ),
         ChangeNotifierProvider(create: (_) => SalesProvider()),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
@@ -56,7 +44,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Inventory App',
       debugShowCheckedModeBanner: false,
-      theme: themeModel.isDarkMode ? themeModel.darkTheme : themeModel.lightTheme,
+      theme:
+          themeModel.isDarkMode ? themeModel.darkTheme : themeModel.lightTheme,
       home: StartScreen(),
     );
   }

@@ -30,6 +30,8 @@ mixin _$ItemModel {
   set quantity(String? value) => throw _privateConstructorUsedError;
   double? get cost_price => throw _privateConstructorUsedError;
   set cost_price(double? value) => throw _privateConstructorUsedError;
+  double? get customer_rating => throw _privateConstructorUsedError;
+  set customer_rating(double? value) => throw _privateConstructorUsedError;
   double? get selling_price => throw _privateConstructorUsedError;
   set selling_price(double? value) => throw _privateConstructorUsedError;
   String? get measurement => throw _privateConstructorUsedError;
@@ -54,6 +56,7 @@ abstract class $ItemModelCopyWith<$Res> {
       String? product_name,
       String? quantity,
       double? cost_price,
+      double? customer_rating,
       double? selling_price,
       String? measurement,
       String? year});
@@ -77,6 +80,7 @@ class _$ItemModelCopyWithImpl<$Res, $Val extends ItemModel>
     Object? product_name = freezed,
     Object? quantity = freezed,
     Object? cost_price = freezed,
+    Object? customer_rating = freezed,
     Object? selling_price = freezed,
     Object? measurement = freezed,
     Object? year = freezed,
@@ -101,6 +105,10 @@ class _$ItemModelCopyWithImpl<$Res, $Val extends ItemModel>
       cost_price: freezed == cost_price
           ? _value.cost_price
           : cost_price // ignore: cast_nullable_to_non_nullable
+              as double?,
+      customer_rating: freezed == customer_rating
+          ? _value.customer_rating
+          : customer_rating // ignore: cast_nullable_to_non_nullable
               as double?,
       selling_price: freezed == selling_price
           ? _value.selling_price
@@ -132,6 +140,7 @@ abstract class _$$ItemModelImplCopyWith<$Res>
       String? product_name,
       String? quantity,
       double? cost_price,
+      double? customer_rating,
       double? selling_price,
       String? measurement,
       String? year});
@@ -153,6 +162,7 @@ class __$$ItemModelImplCopyWithImpl<$Res>
     Object? product_name = freezed,
     Object? quantity = freezed,
     Object? cost_price = freezed,
+    Object? customer_rating = freezed,
     Object? selling_price = freezed,
     Object? measurement = freezed,
     Object? year = freezed,
@@ -177,6 +187,10 @@ class __$$ItemModelImplCopyWithImpl<$Res>
       cost_price: freezed == cost_price
           ? _value.cost_price
           : cost_price // ignore: cast_nullable_to_non_nullable
+              as double?,
+      customer_rating: freezed == customer_rating
+          ? _value.customer_rating
+          : customer_rating // ignore: cast_nullable_to_non_nullable
               as double?,
       selling_price: freezed == selling_price
           ? _value.selling_price
@@ -203,6 +217,7 @@ class _$ItemModelImpl implements _ItemModel {
       required this.product_name,
       required this.quantity,
       required this.cost_price,
+      required this.customer_rating,
       required this.selling_price,
       required this.measurement,
       required this.year});
@@ -221,6 +236,8 @@ class _$ItemModelImpl implements _ItemModel {
   @override
   double? cost_price;
   @override
+  double? customer_rating;
+  @override
   double? selling_price;
   @override
   String? measurement;
@@ -229,7 +246,7 @@ class _$ItemModelImpl implements _ItemModel {
 
   @override
   String toString() {
-    return 'ItemModel(id: $id, barcode: $barcode, product_name: $product_name, quantity: $quantity, cost_price: $cost_price, selling_price: $selling_price, measurement: $measurement, year: $year)';
+    return 'ItemModel(id: $id, barcode: $barcode, product_name: $product_name, quantity: $quantity, cost_price: $cost_price, customer_rating: $customer_rating, selling_price: $selling_price, measurement: $measurement, year: $year)';
   }
 
   @JsonKey(ignore: true)
@@ -253,6 +270,7 @@ abstract class _ItemModel implements ItemModel {
       required String? product_name,
       required String? quantity,
       required double? cost_price,
+      required double? customer_rating,
       required double? selling_price,
       required String? measurement,
       required String? year}) = _$ItemModelImpl;
@@ -275,6 +293,9 @@ abstract class _ItemModel implements ItemModel {
   @override
   double? get cost_price;
   set cost_price(double? value);
+  @override
+  double? get customer_rating;
+  set customer_rating(double? value);
   @override
   double? get selling_price;
   set selling_price(double? value);

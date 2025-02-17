@@ -15,10 +15,8 @@ import '../../sale_dir/view/sales_details_screen.dart';
 import '../../sale_dir/view/sales_screen.dart';
 
 class HomeProvider extends ChangeNotifier {
-  final DatabaseHelper dbHelper;
-  final ProductService service;
 
-  HomeProvider({required this.dbHelper, required this.service});
+
 
   int _productCount = 0;
 
@@ -40,7 +38,7 @@ class HomeProvider extends ChangeNotifier {
 
   void gotoForecast(BuildContext context) {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const ForecastScreen()));
+        MaterialPageRoute(builder: (context) => const PredictionScreen()));
   }
 
   void gotoMakeSales(BuildContext context) {

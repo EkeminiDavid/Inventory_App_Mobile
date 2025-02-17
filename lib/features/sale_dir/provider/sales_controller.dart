@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:inv_management_app/features/productList_dir/provider/product_list_controller.dart';
 import 'package:inv_management_app/features/sale_dir/view/sales_screen.dart';
 import 'package:inv_management_app/models/cart_item.dart';
@@ -9,13 +8,11 @@ import 'package:inv_management_app/models/sales_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../components/universal/toast_widget.dart';
-import '../../../db/db_helper.dart';
 import '../../../models/item_model.dart';
-import '../../../models/product_model.dart';
 import '../../../network/network_client.dart';
+import '../../../utils/scanner.dart';
 
 class SalesProvider extends ChangeNotifier {
-  final DatabaseHelper dbHelper = DatabaseHelper();
   List<ItemModel> products = [];
   List<CartItem> cartItems = [];
   List<SalesModel> items = [];
@@ -35,6 +32,7 @@ class SalesProvider extends ChangeNotifier {
       product_name: "product_name",
       quantity: "",
       cost_price: 0,
+      customer_rating: 0,
       selling_price: 0,
       measurement: "",
       year: "");
@@ -47,6 +45,7 @@ class SalesProvider extends ChangeNotifier {
           product_name: "",
           quantity: "0",
           cost_price: 0,
+          customer_rating: 0,
           selling_price: 0,
           measurement: "",
           year: ""));
@@ -147,7 +146,7 @@ class SalesProvider extends ChangeNotifier {
   }
 
   Future<void> completeSale1(BuildContext context) async {
-    final db = await dbHelper.database;
+    // final db = await dbHelper.database;
 
     for (var item in cartItems) {
       detailListx.add({
@@ -251,17 +250,19 @@ class SalesProvider extends ChangeNotifier {
 
   Future<void> startBarcodeScan(BuildContext context) async {
     try {
+      // String scannedData = "";
+      String? scannedData = await barcodeScanner(context);
       // Start the barcode scan
-      String scannedData = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666", // Scanner overlay color
-        "Cancel", // Cancel button text
-        true, // Enable flash
-        ScanMode.BARCODE, // Scan mode (BARCODE or QR code)
-      );
+      // String scannedData = await FlutterBarcodeScanner.scanBarcode(
+      //   "#ff6666", // Scanner overlay color
+      //   "Cancel", // Cancel button text
+      //   true, // Enable flash
+      //   ScanMode.BARCODE, // Scan mode (BARCODE or QR code)
+      // );
 
       if (scannedData != '-1') {
         // Display scanned data
-        searchController.text = scannedData;
+        searchController.text = scannedData!;
         searchProducts(scannedData);
         notifyListeners();
         ScaffoldMessenger.of(context).showSnackBar(

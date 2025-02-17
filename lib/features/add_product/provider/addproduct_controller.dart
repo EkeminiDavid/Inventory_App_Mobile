@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:inv_management_app/components/universal/toast_widget.dart';
 import 'package:inv_management_app/db/db_helper.dart';
 import 'package:inv_management_app/network/network_client.dart';
@@ -10,6 +9,7 @@ import 'package:inv_management_app/services/db_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/product_model.dart';
+import '../../../utils/scanner.dart';
 import '../../productList_dir/provider/product_list_controller.dart';
 
 class AddProductProvider extends ChangeNotifier {
@@ -27,10 +27,8 @@ class AddProductProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  final ProductService service;
-  final DatabaseHelper dbHelper;
-
-  AddProductProvider({required this.service, required this.dbHelper});
+/*  final ProductService service;
+  final DatabaseHelper dbHelper;*/
 
   List<Product> _products = [];
 
@@ -63,9 +61,10 @@ class AddProductProvider extends ChangeNotifier {
       "selling_price": sellingPrice
     };
     await add(bodyForServer, context);
-    await service.addProduct(newProduct);
+    // await service.addProduct(newProduct);
     await fetchProducts();
-    Provider.of<ProductListProvider>(context, listen: false).newFetchProducts(context);
+    Provider.of<ProductListProvider>(context, listen: false)
+        .newFetchProducts(context);
     notifyListeners();
   }
 
@@ -90,7 +89,7 @@ class AddProductProvider extends ChangeNotifier {
   }
 
   Future<void> fetchProducts() async {
-    _products = await service.getProducts();
+    // _products = await service.getProducts();
     log(_products.toString());
     notifyListeners();
   }
@@ -148,20 +147,11 @@ class AddProductProvider extends ChangeNotifier {
   Future<String> startBarcodeScan(BuildContext context) async {
     try {
       String realBarcode = "";
-      String scannedData = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666", // Scanner overlay color
-        "Cancel", // Cancel button text
-        true, // Enable flash
-        ScanMode.BARCODE, // Scan mode (BARCODE or QR code)
-      );
+      String? scannedData = await barcodeScanner(context);
 
       if (scannedData != '-1') {
-        // Display scanned data
-        barcodeController.text = scannedData;
-        // notifyListeners();
-        /*ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Scanned Data: $scannedData")),
-        );*/
+        barcodeController.text = scannedData!;
+        notifyListeners();
         return realBarcode;
       } else {
         return "Not Successful";

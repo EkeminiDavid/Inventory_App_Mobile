@@ -12,6 +12,7 @@ class ItemModel with _$ItemModel {
     required String? product_name,
     required String? quantity,
     required double? cost_price,
+    required double? customer_rating,
     required double? selling_price,
     required String? measurement,
     required String? year,

@@ -1,16 +1,15 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:inv_management_app/components/universal/toast_widget.dart';
 import 'package:inv_management_app/models/item_model.dart';
 
 import '../../../models/product_model.dart';
 import '../../../network/network_client.dart';
 import '../../../services/db_service.dart';
+import '../../../utils/scanner.dart';
 
 class ProductListProvider extends ChangeNotifier {
-  final ProductService _productService;
   List<Product> _products = [];
    List<ItemModel> _items = [];
   final TextEditingController searchController = TextEditingController();
@@ -25,7 +24,7 @@ class ProductListProvider extends ChangeNotifier {
   List<ItemModel> get itemList => _filteredItemList;
 
 
-  ProductListProvider(this._productService, this.networkService);
+  ProductListProvider(this.networkService);
 
   List<Product> get products => _products;
   List<ItemModel> get items => _items;
@@ -108,17 +107,12 @@ class ProductListProvider extends ChangeNotifier {
 
   Future<void> startBarcodeScan(BuildContext context) async {
     try {
-      // Start the barcode scan
-      String scannedData = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666", // Scanner overlay color
-        "Cancel", // Cancel button text
-        true, // Enable flash
-        ScanMode.BARCODE, // Scan mode (BARCODE or QR code)
-      );
+
+      String? scannedData = await barcodeScanner(context);
 
       if (scannedData != '-1') {
         // Display scanned data
-        searchController.text = scannedData;
+        searchController.text = scannedData!;
         searchProducts(scannedData);
         notifyListeners();
         ScaffoldMessenger.of(context).showSnackBar(

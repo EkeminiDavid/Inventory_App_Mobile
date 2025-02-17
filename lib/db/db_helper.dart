@@ -1,4 +1,5 @@
 // services/database_helper.dart
+/*
 import 'dart:developer';
 
 import 'package:inv_management_app/db/data_entities.dart';
@@ -156,3 +157,4 @@ class DatabaseHelper {
   }
 
 }
+*/

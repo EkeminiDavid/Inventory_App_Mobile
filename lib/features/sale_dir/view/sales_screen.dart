@@ -454,6 +454,7 @@ class SalesProductScreen extends StatelessWidget {
                     );
                   },
                   title: Text(product.product_name!),
+                  trailing: Text('rating: ${product.customer_rating}'),
                   subtitle:
                       Text('\$${product.selling_price?.toStringAsFixed(2)}'),
                 );
