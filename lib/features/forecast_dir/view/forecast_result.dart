@@ -260,7 +260,6 @@ class SeasonalityPredictionsCard extends StatelessWidget {
 }
 */
 
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -268,6 +267,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../../../models/sales_prediction.dart';
+import '../../../utils/scanner.dart';
 import '../provider/forecast_controller.dart';
 
 class ForecastResult extends StatelessWidget {
@@ -310,7 +310,8 @@ class ForecastResult extends StatelessWidget {
               }
 
               final prediction = provider.predictionData!;
-              final firstWeek = prediction.metadata.seasonalityEffects.entries.first;
+              final firstWeek =
+                  prediction.metadata.seasonalityEffects.entries.first;
 
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -318,7 +319,8 @@ class ForecastResult extends StatelessWidget {
                   children: [
                     SeasonalityPredictionsCard(
                       predictedQuantity: firstWeek.value.predictedQuantity,
-                      originalQuantity: 0.0, // You'll need to provide original quantity
+                      originalQuantity: 0.0,
+                      // You'll need to provide original quantity
                       seasonalityFactors: firstWeek.value.season,
                       weekDate: prediction.metadata.startDate,
                     ),
@@ -342,13 +344,18 @@ class ForecastResult extends StatelessWidget {
                               title: const Text('Forecast Period'),
                               subtitle: Text(
                                   '${prediction.metadata.startDate.toString().split(' ')[0]} to '
-                                      '${prediction.metadata.endDate.toString().split(' ')[0]}'),
+                                  '${prediction.metadata.endDate.toString().split(' ')[0]}'),
                             ),
                             ListTile(
                               leading: const Icon(Icons.shopping_cart),
                               title: const Text('Total Predicted Quantity'),
-                              subtitle: Text(
-                                  prediction.metadata.totalPredictedQuantity.toString()),
+                              subtitle: Text(roundDouble(
+                                          prediction
+                                              .metadata.totalPredictedQuantity,
+                                          2)
+                                      .toString()
+                                  // prediction.metadata.totalPredictedQuantity.toString()
+                                  ),
                             ),
                           ],
                         ),
@@ -403,21 +410,21 @@ class SeasonalityPredictionsCard extends StatelessWidget {
             Text(
               _formatWeekDate(weekDate),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+                    color: Colors.grey[600],
+                  ),
             ),
             const SizedBox(height: 24),
             _buildPredictionRow(
-              'Adjusted Prediction',
-              predictedQuantity,
+              'Prediction Quantity',
+              roundDouble(predictedQuantity, 2),
               Colors.green,
             ),
             const SizedBox(height: 12),
-            _buildPredictionRow(
+            /*_buildPredictionRow(
               'Base Prediction',
               originalQuantity,
               Colors.blue,
-            ),
+            ),*/
             const SizedBox(height: 24),
             if (seasonalityFactors.isNotEmpty) ...[
               Text(
@@ -426,18 +433,18 @@ class SeasonalityPredictionsCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               ...seasonalityFactors.map((factor) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  children: [
-                    const Icon(Icons.event, size: 16),
-                    const SizedBox(width: 8),
-                    Text(factor),
-                  ],
-                ),
-              )),
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.event, size: 16),
+                        const SizedBox(width: 8),
+                        Text(factor),
+                      ],
+                    ),
+                  )),
             ],
             const SizedBox(height: 16),
-            _buildImpactIndicator(),
+            // _buildImpactIndicator(),
           ],
         ),
       ),
@@ -479,8 +486,7 @@ class SeasonalityPredictionsCard extends StatelessWidget {
 
   Widget _buildImpactIndicator() {
     final impact =
-    ((predictedQuantity - originalQuantity) / originalQuantity * 100)
-        ;
+        ((predictedQuantity - originalQuantity) / originalQuantity * 100);
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -502,5 +508,4 @@ class SeasonalityPredictionsCard extends StatelessWidget {
       ),
     );
   }
-
 }

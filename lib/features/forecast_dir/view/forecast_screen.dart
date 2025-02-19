@@ -57,132 +57,135 @@ class _PredictionScreenState extends State<PredictionScreen> {
     });
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text('Demand Predictions'),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Flexible(
-                  child: Column(
-                    children: [
-                      Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'Enter Product name',
-                            style: themeModel.lightTheme.textTheme.bodyMedium,
-                          )),
-                      DropDownSearchFormField<ItemModel>(
-                        hideOnEmpty: true,
-                        hideOnError: true,
-                        noItemsFoundBuilder: (context) {
-                          return const SizedBox();
-                        },
-                        suggestionsBoxDecoration:
-                            const SuggestionsBoxDecoration(),
-                        textFieldConfiguration: TextFieldConfiguration(
-                          onChanged: (value) {},
-                          controller: provider.productNameController,
-                        ),
-                        onSuggestionSelected: (ItemModel suggestion) {
-                          provider.productNameController.text =
-                              suggestion.product_name ?? '';
-                          // controller.appendText(suggestion);
-                        },
-                        suggestionsCallback: (String pattern) async {
-                          List<ItemModel> suggestions =
-                              await provider.searchProducts(pattern);
-                          return suggestions;
-                        },
-                        itemBuilder:
-                            (BuildContext context, ItemModel itemData) {
-                          return GestureDetector(
-                            onTap: () {
-                              print('john ${itemData.toString()}');
-                              provider.productNameController.text =
-                                  itemData.product_name ?? '';
-                              // controller.appendText(itemData);
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(itemData.product_name ?? ''),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  const Divider()
-                                ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Column(
+                      children: [
+                        Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Enter Product name',
+                              style: themeModel.lightTheme.textTheme.bodyMedium,
+                            )),
+                        DropDownSearchFormField<ItemModel>(
+                          hideOnEmpty: true,
+                          hideOnError: true,
+                          noItemsFoundBuilder: (context) {
+                            return const SizedBox();
+                          },
+                          suggestionsBoxDecoration:
+                              const SuggestionsBoxDecoration(),
+                          textFieldConfiguration: TextFieldConfiguration(
+                            onChanged: (value) {},
+                            controller: provider.productNameController,
+                          ),
+                          onSuggestionSelected: (ItemModel suggestion) {
+                            provider.productNameController.text =
+                                suggestion.product_name ?? '';
+                            // controller.appendText(suggestion);
+                          },
+                          suggestionsCallback: (String pattern) async {
+                            List<ItemModel> suggestions =
+                                await provider.searchProducts(pattern);
+                            return suggestions;
+                          },
+                          itemBuilder:
+                              (BuildContext context, ItemModel itemData) {
+                            return GestureDetector(
+                              onTap: () {
+                                print('john ${itemData.toString()}');
+                                provider.productNameController.text =
+                                    itemData.product_name ?? '';
+                                // controller.appendText(itemData);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(itemData.product_name ?? ''),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    const Divider()
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-                      Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'Select Start Date',
-                            style: themeModel.lightTheme.textTheme.bodyMedium,
-                          )),
-                      TextField(
-                        onTap: () {
-                          provider.selectStartDate(context);
-                        },
-                        controller: provider.startDateController,
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'Select End Date',
-                            style: themeModel.lightTheme.textTheme.bodyMedium,
-                          )),
-                      TextField(
-                        onTap: () {
-                          provider.selectEndDate(context);
-                        },
-                        controller: provider.endDateController,
-                      ),
-                      SizedBox(height: 16,),
-                      StarRatingDropdown(selectedRating: selectedRating, onRatingSelected: _onRatingSelected,),
-                      SizedBox(height: 16,),
-                      SeasonDropdown(selectedEvent: selectedEvent, onEventSelected: _onSeasonSelected)
-                    ],
+                            );
+                          },
+                        ),
+                        Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Select Start Date',
+                              style: themeModel.lightTheme.textTheme.bodyMedium,
+                            )),
+                        TextField(
+                          onTap: () {
+                            provider.selectStartDate(context);
+                          },
+                          controller: provider.startDateController,
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              'Select End Date',
+                              style: themeModel.lightTheme.textTheme.bodyMedium,
+                            )),
+                        TextField(
+                          onTap: () {
+                            provider.selectEndDate(context);
+                          },
+                          controller: provider.endDateController,
+                        ),
+                        SizedBox(height: 16,),
+                        StarRatingDropdown(selectedRating: selectedRating, onRatingSelected: _onRatingSelected,),
+                        SizedBox(height: 16,),
+                        SeasonDropdown(selectedEvent: selectedEvent, onEventSelected: _onSeasonSelected)
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-
-          Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: 32,
-            ),
-            width: MediaQuery.of(context).size.width,
-            height: 50,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.shade800,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16))),
-              onPressed: () {
-                provider.runForecast(context);
-                },
-              child: const Text(
-                'Forcast',
-                style: TextStyle(color: Colors.white),
+                ],
               ),
             ),
-          ),
-
-        ],
+        
+            Container(
+              margin: EdgeInsets.symmetric(
+                horizontal: 32,
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey.shade800,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16))),
+                onPressed: () {
+                  provider.runForecast(context);
+                  },
+                child: const Text(
+                  'Forcast',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+        
+          ],
+        ),
       ),
     );
   }

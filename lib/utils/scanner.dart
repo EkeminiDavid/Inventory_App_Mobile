@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+import 'dart:math';
+
 
 barcodeScanner (BuildContext context) async {
   String? res = await SimpleBarcodeScanner.scanBarcode(
@@ -16,5 +18,8 @@ barcodeScanner (BuildContext context) async {
     cameraFace: CameraFace.back,
   );
   return res as String;
+}
 
+double roundDouble(double value, int places) {
+  return double.parse(value.toStringAsFixed(places));
 }
