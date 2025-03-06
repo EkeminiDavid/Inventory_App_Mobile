@@ -12,14 +12,14 @@ import '../../../models/item_model.dart';
 import '../provider/forecast_controller.dart';
 import 'forecast_result.dart';
 
-class PredictionScreen extends StatefulWidget {
-  const PredictionScreen({Key? key}) : super(key: key);
+class ForecastScreen extends StatefulWidget {
+  const ForecastScreen({Key? key}) : super(key: key);
 
   @override
-  State<PredictionScreen> createState() => _PredictionScreenState();
+  State<ForecastScreen> createState() => _ForecastScreenState();
 }
 
-class _PredictionScreenState extends State<PredictionScreen> {
+class _ForecastScreenState extends State<ForecastScreen> {
   late PredictionProvider provider;
   @override
   void initState() {
@@ -176,6 +176,8 @@ class _PredictionScreenState extends State<PredictionScreen> {
                         borderRadius: BorderRadius.circular(16))),
                 onPressed: () {
                   provider.runForecast(context);
+                  selectedRating = 0.0;
+                  selectedEvent = 'Normal';
                   },
                 child: const Text(
                   'Forcast',

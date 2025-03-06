@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:inv_management_app/components/universal/toast_widget.dart';
+import 'package:inv_management_app/features/forecast_dir/view/forecast_screen.dart';
 import 'package:inv_management_app/features/productList_dir/provider/product_list_controller.dart';
 import 'package:inv_management_app/models/item_model.dart';
 import 'package:inv_management_app/models/sales_prediction.dart';
@@ -28,13 +30,13 @@ class PredictionProvider extends ChangeNotifier {
   DateTime selectedDate = DateTime.now();
   double selectedRating = 0.0;
   String selectedSeason = '';
-  var formattedDate = '';
-  var formattedDateForServer = '';
+  String formattedDate = '';
+  String formattedDateForServer = '';
   bool callSuccesfull = false;
   List<ItemModel> newList = [];
 
-  var formattedEndDate = '';
-  var formattedEndDateForServer = '';
+  String formattedEndDate = '';
+  String formattedEndDateForServer = '';
 
   PredictionStatus _status = PredictionStatus.initial;
   PredictionResponse? _predictionData;
@@ -107,7 +109,7 @@ class PredictionProvider extends ChangeNotifier {
     return 0.0;
   }*/
 
-  Future<int> fetchPredictions({
+  Future<PredictionResponse?> fetchPredictions({
     required String startDate,
     required String endDate,
     required String product,
@@ -133,21 +135,23 @@ class PredictionProvider extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        _predictionData = PredictionResponse.fromJson(jsonDecode(response.body));
+        _predictionData =
+            PredictionResponse.fromJson(jsonDecode(response.body));
         _status = PredictionStatus.loaded;
+        log('ForeCast Result ${response.body}');
         notifyListeners();
-        return 1;
+        return _predictionData;
       } else {
         _error = 'Failed to load predictions: ${response.statusCode}';
         _status = PredictionStatus.error;
         notifyListeners();
-        return 0;
+        return null;
       }
     } catch (e) {
       _error = 'Error fetching predictions: $e';
       _status = PredictionStatus.error;
       notifyListeners();
-      return 0;
+      return null;
     }
   }
 
@@ -217,16 +221,24 @@ class PredictionProvider extends ChangeNotifier {
       customerRating: selectedRating,
       season: selectedSeason,
     );
-    if (_status == PredictionStatus.loaded) { // Check the status *after* fetchPredictions completes
+    if (_status == PredictionStatus.loaded) {
+      // Check the status *after* fetchPredictions completes
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ForecastResult()),
+        MaterialPageRoute(
+            builder: (context) => PredictionScreen(
+                  predictionResponse: result!,
+                )),
       );
+      productNameController.clear();
+      endDateController.clear();
+      startDateController.clear();
+      selectedSeason = '';
+      selectedRating = 0.0;
     } else if (_status == PredictionStatus.error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(_error!)), // Show the error message
       );
     }
-
   }
 }

@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import '../../../db/db_helper.dart';
 import '../../../services/db_service.dart';
 import '../../forecast_dir/view/forecast_screen.dart';
-import '../../forecast_dir/view/forecast_screen1.dart';
 import '../../loading_screen_dir/view/sample_screen.dart';
 import '../../productList_dir/provider/product_list_controller.dart';
 import '../../sale_dir/view/sales_details_screen.dart';
@@ -38,7 +37,7 @@ class HomeProvider extends ChangeNotifier {
 
   void gotoForecast(BuildContext context) {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const PredictionScreen()));
+        MaterialPageRoute(builder: (context) => const ForecastScreen()));
   }
 
   void gotoMakeSales(BuildContext context) {

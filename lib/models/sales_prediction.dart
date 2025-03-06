@@ -219,7 +219,8 @@ class SeasonalityEffect {
 
 
 */
-
+// Before
+/*
 class PredictionResponse {
   final PredictionMetadata metadata;
   final PredictionData predictions;
@@ -299,4 +300,92 @@ class PredictionData {
   }
 }
 
+class WeekInfo {
+  final double predictedQuantity;
+  final List<String> season;
 
+  WeekInfo({
+    required this.predictedQuantity,
+    required this.season,
+  });
+
+  factory WeekInfo.fromJson(Map<String, dynamic> json) {
+    return WeekInfo(
+      predictedQuantity: json['predicted_quantity'].toDouble(),
+      season: List<String>.from(json['season']),
+    );
+  }
+}
+*/
+//New
+
+class PredictionResponse {
+  final Metadata metadata;
+  final Map<String, double> predictions;
+  final String message;
+  final int statusCode;
+
+  PredictionResponse({
+    required this.metadata,
+    required this.predictions,
+    required this.message,
+    required this.statusCode,
+  });
+
+  factory PredictionResponse.fromJson(Map<String, dynamic> json) {
+    return PredictionResponse(
+      metadata: Metadata.fromJson(json['body']['metadata']),
+      predictions: Map<String, double>.from(json['body']['predictions']),
+      message: json['message'],
+      statusCode: json['status_code'],
+    );
+  }
+}
+
+class Metadata {
+  final String endDate;
+  final String product;
+  final Map<String, SeasonalityEffect> seasonalityEffects;
+  final String startDate;
+  final double totalPredictedQuantity;
+  final int totalWeeks;
+
+  Metadata({
+    required this.endDate,
+    required this.product,
+    required this.seasonalityEffects,
+    required this.startDate,
+    required this.totalPredictedQuantity,
+    required this.totalWeeks,
+  });
+
+  factory Metadata.fromJson(Map<String, dynamic> json) {
+    return Metadata(
+      endDate: json['end_date'],
+      product: json['product'],
+      seasonalityEffects: (json['seasonality_effects'] as Map<String, dynamic>).map(
+            (key, value) => MapEntry(key, SeasonalityEffect.fromJson(value)),
+      ),
+      startDate: json['start_date'],
+      totalPredictedQuantity: json['total_predicted_quantity'],
+      totalWeeks: json['total_weeks'],
+    );
+  }
+}
+
+class SeasonalityEffect {
+  final double predictedQuantity;
+  final List<String> season;
+
+  SeasonalityEffect({
+    required this.predictedQuantity,
+    required this.season,
+  });
+
+  factory SeasonalityEffect.fromJson(Map<String, dynamic> json) {
+    return SeasonalityEffect(
+      predictedQuantity: json['predicted_quantity'],
+      season: List<String>.from(json['season']),
+    );
+  }
+}
